@@ -3,7 +3,6 @@ from datetime import datetime
 
 @strawberry.type
 class Author:
-	id: int
 	username: str
 	email: str
 	password: str
@@ -12,7 +11,6 @@ class Author:
 
 @strawberry.type
 class Post:
-	id: int
 	title: str
 	content: str
 	author_id: int
@@ -21,7 +19,6 @@ class Post:
 
 @strawberry.type
 class PostComment:
-	id: int
 	post_id: int
 	author_id: int
 	content: str

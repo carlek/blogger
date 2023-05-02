@@ -7,7 +7,7 @@ Base = declarative_base()
 # SQLAlchemy models
 class Author(Base):
 	__tablename__ = "author"
-	id = Column(Integer, primary_key=True)
+	id = Column(Integer, primary_key=True, autoincrement=True)
 	username = Column(String)
 	email = Column(String)
 	password = Column(String)
@@ -19,7 +19,7 @@ class Author(Base):
 
 class Post(Base):
 	__tablename__ = "post"
-	id = Column(Integer, primary_key=True)
+	id = Column(Integer, primary_key=True, autoincrement=True)
 	title = Column(String)
 	content = Column(String)
 	author_id = Column(Integer, ForeignKey("author.id"))
@@ -31,7 +31,7 @@ class Post(Base):
 
 class PostComment(Base):
 	__tablename__ = "postcomment"
-	id = Column(Integer, primary_key=True)
+	id = Column(Integer, primary_key=True, autoincrement=True)
 	post_id = Column(Integer, ForeignKey("post.id"))
 	author_id = Column(Integer, ForeignKey("author.id"))
 	content = Column(String)
@@ -39,4 +39,3 @@ class PostComment(Base):
 	updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 	post = relationship("Post", back_populates="comments")
 	author = relationship("Author", back_populates="comments")
-

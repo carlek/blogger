@@ -5,7 +5,6 @@ mutation {
     email: "johndoe@example.com"
     password: "password123"
   ) {
-    id
     username
     email
     createdAt
@@ -20,7 +19,6 @@ mutation {
     content: "This is the content of my first post"
     authorId: 1
   ) {
-    id
     title
     content
     authorId
@@ -29,14 +27,13 @@ mutation {
 }
 '''
 
-create_postcomment = '''
+create_post_comment = '''
 mutation {
   createPostComment(
     postId: 1
     authorId: 1
     content: "This is my comment on the first post"
   ) {
-    id
     postId
     authorId
     content
