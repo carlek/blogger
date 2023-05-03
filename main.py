@@ -8,6 +8,7 @@ from strawberry_classes.queries import Query
 from strawberry_classes.mutations import Mutation
 from util.async_objects import Engine
 from util.settings import settings
+from db.models import Base
 
 # define FastAPI app
 app = FastAPI()
@@ -19,11 +20,10 @@ graphql_app = GraphQLRouter(schema=strawberry.Schema(query=Query, mutation=Mutat
 app.include_router(graphql_app, prefix="/graphql")
 
 async def init_models():
-	base = declarative_base()
-	async_engine = Engine().engine
-	async with async_engine.begin() as conn:
-		await conn.run_sync(base.metadata.drop_all)
-		await conn.run_sync(base.metadata.create_all)
+	engine = Engine().async_engine
+	async with engine.begin() as conn:
+		await conn.run_sync(Base.metadata.drop_all)
+		await conn.run_sync(Base.metadata.create_all)
 
 if __name__ == "__main__":
 	asyncio.run(init_models())

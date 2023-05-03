@@ -8,8 +8,8 @@ Base = declarative_base()
 class Author(Base):
 	__tablename__ = "author"
 	id = Column(Integer, primary_key=True, autoincrement=True)
-	username = Column(String)
-	email = Column(String)
+	username = Column(String, unique=True)
+	email = Column(String, unique=True)
 	password = Column(String)
 	created_at = Column(DateTime, default=datetime.utcnow)
 	updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
