@@ -80,9 +80,9 @@ class Query:
 				db_posts = result.all()
 				return [
 					Post(
-						title=d.Post.username,
-						content=d.Post.email,
-						author_id=d.Post.password,
+						title=d.Post.title,
+						content=d.Post.content,
+						author_id=d.Post.author_id,
 						created_at=d.Post.created_at,
 						updated_at=d.Post.updated_at,
 					)
