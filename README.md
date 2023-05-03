@@ -1,9 +1,6 @@
 #blogger
 
 
-### Install Dependencies:
+### FastAPI app with graphql api to support blog data 
 
-```
-pip install fastapi uvicorn databases[postgresql] graphene
-```
 
