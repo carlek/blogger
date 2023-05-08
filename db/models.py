@@ -23,9 +23,9 @@ class Post(Base):
 	title = Column(String)
 	content = Column(String)
 	author_id = Column(Integer, ForeignKey("author.id"))
-	author = relationship("Author", back_populates="posts")
 	created_at = Column(DateTime, default=datetime.utcnow)
 	updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+	author = relationship("Author", back_populates="posts")
 	comments = relationship("PostComment", back_populates="post")
 
 

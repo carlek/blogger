@@ -1,10 +1,12 @@
-import strawberry
-from strawberry_classes.models import Author, Post, PostComment
-from db.models import Author as db_Author, Post as db_Post, PostComment as db_PostComment
 from datetime import datetime
-from util.settings import settings
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+
+import strawberry
 from sqlalchemy import text, select
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+
+from db.models import Author as db_Author, Post as db_Post, PostComment as db_PostComment
+from strawberry_classes.models import Author, Post, PostComment
+from util.settings import settings
 
 @strawberry.type
 class Mutation:
@@ -12,12 +14,13 @@ class Mutation:
 	async def create_author(self, username: str, email: str, password: str) -> Author:
 		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
 			async with AsyncSession(bind=conn) as session:
+				create_time = datetime.now()
 				db_author = db_Author(
 					username=username,
 					email=email,
 					password=password,
-					created_at=datetime.now(),
-					updated_at=datetime.now(),
+					created_at=create_time,
+					updated_at=create_time,
 				)
 				session.add(db_author)
 				await session.commit()
@@ -25,8 +28,8 @@ class Mutation:
 					username=username,
 					email=email,
 					password=password,
-					created_at=datetime.now(),
-					updated_at=datetime.now(),
+					created_at=create_time,
+					updated_at=create_time
 				)
 
 	@strawberry.mutation

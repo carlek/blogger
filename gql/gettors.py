@@ -1,9 +1,51 @@
+
+get_author_query = """
+    query GetAuthor($id: Int!) {
+        getAuthor(id: $id) {
+            username
+            email
+            password
+            createdAt
+            updatedAt
+        }
+    }
+"""
+
+get_author_variables = \
+	[
+		{"id": 1},
+		{"id": 2},
+		{"id": 123123123},
+	]
+
+
+get_post_query = """
+  query GetPost($id: Int!) {
+    getPost(id: $id) {
+	  title
+	  content
+	  authorId
+	  authorName
+	  createdAt
+	  updatedAt
+    }
+  }
+"""
+
+get_post_variables = \
+  [
+    {"id": 1},
+    {"id": 123},
+    {"id": 99},
+  ]
+
 # get_author(id: int) -> Author:
 get_author = """
 query {
   getAuthor(id: 1) {
     username
     email
+    password
     createdAt
     updatedAt
   }

@@ -5,7 +5,9 @@ create_author_query = """
         createAuthor(username: $username, email: $email, password: $password) {
             username
             email
+            password
             createdAt
+            updatedAt
         }
     }
 """
@@ -57,17 +59,6 @@ for i in range(number_of_comments):
 	authornum = random.randint(1, number_of_authors)
 	v = {"postId": postnum, "authorId": authornum, "content": f"Comment from author:{authornum} on post:{postnum}"}
 	create_post_comment_variables.append(v)
-
-# create_post_comment_variables = \
-# 	[
-# 		{"postId": 1, "authorId": 1, "content": "This is author 1's comment on post 1"},
-# 		{"postId": 2, "authorId": 2, "content": "This is author 2's comment on post 2"},
-# 		{"postId": 3, "authorId": 3, "content": "This is author 3's comment on post 3"},
-# 		{"postId": 4, "authorId": 4, "content": "This is author 4's comment on post 4"},
-# 		{"postId": 5, "authorId": 5, "content": "This is author 5's comment on post 5"},
-# 		{"postId": 6, "authorId": 1, "content": "This is author 1's comment on post 6"},
-# 		{"postId": 7, "authorId": 2, "content": "This is author 2's comment on post 7"},
-# 	]
 
 # raw queries
 create_author_raw = '''
