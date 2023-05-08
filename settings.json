@@ -1,4 +1,0 @@
-{
-  "DB_CONNECTION_URL": "postgresql://carlek:ekekek@localhost/blogger",
-  "action": "copy this to settings.json with real values."
-}
