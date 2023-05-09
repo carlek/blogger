@@ -1,0 +1,34 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blogger-app-container
+    command: python main.py
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+#      - DATABASE_URL=postgresql+asyncpg://postgres:password@blogger-db:5432/blogger
+    depends_on:
+      - blogger-db
+
+  blogger-db:
+    image: postgres:15
+    container_name: blogger-db-container
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=blogger
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+#      - ./init-user.sql:/docker-entrypoint-initdb.d/init-user.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
