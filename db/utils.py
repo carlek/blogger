@@ -1,4 +1,3 @@
-import psycopg2
 import requests
 from sqlalchemy_utils import database_exists, create_database
 
