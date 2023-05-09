@@ -48,7 +48,7 @@ query GetAuthor($id: Int!) {
 variables = {"id": 1}
 
 # edit author
-mutation EditAuthor($id: Int!, $username: String, $email: String, $password: String) {
+mutation EditAuthor($id: Int!, $password: String) {
   editAuthor(id: $id, username: $username, email: $email, password: $password) {
     username
     email
@@ -57,6 +57,10 @@ mutation EditAuthor($id: Int!, $username: String, $email: String, $password: Str
     updatedAt
   }
 }
-variables = {'id': 1, 'password': 'new_password_1'}
-  
+variables = 
+{
+  "id": 1, 
+  "password": "new_password_2",
+  "email":"newjohndoe@example.com"
+}
 ```
