@@ -5,9 +5,8 @@ from strawberry_classes.mutations import Mutation
 import fastapi
 from db.utils import create_data
 
-# define FastAPI app and router
+# define FastAPI app
 app = fastapi.FastAPI()
-router = fastapi.APIRouter()
 
 # define GraphQL app with Strawberry schema and add route
 graphql_app = GraphQLRouter(schema=strawberry.Schema(query=Query, mutation=Mutation))
