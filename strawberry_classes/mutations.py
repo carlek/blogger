@@ -24,7 +24,9 @@ class Mutation:
 				)
 				session.add(db_author)
 				await session.commit()
+				await session.refresh(db_author)
 				return Author(
+					id=db_author.id,
 					username=username,
 					email=email,
 					password=password,
@@ -82,7 +84,9 @@ class Mutation:
 				)
 				session.add(db_post)
 				await session.commit()
+				await session.refresh(db_post)
 				return Post(
+					id=db_post.id,
 					title=title,
 					content=content,
 					author_id=author_id,
@@ -103,7 +107,9 @@ class Mutation:
 				)
 				session.add(db_post_comment)
 				await session.commit()
+				await session.refresh(db_post_comment)
 				return PostComment(
+					id=db_post_comment.id,
 					post_id=post_id,
 					author_id=author_id,
 					content=content,

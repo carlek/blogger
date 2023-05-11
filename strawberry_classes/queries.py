@@ -18,6 +18,7 @@ class Query:
 				if None is (db_author := result.fetchone()):
 					raise ValueError(f"Author with id {id} not found")
 				return Author(
+					id=db_author.Author.id,
 					username=db_author.Author.username,
 					email=db_author.Author.email,
 					password=db_author.Author.password,
@@ -33,6 +34,7 @@ class Query:
 				if None is (db_post := result.fetchone()):
 					raise ValueError(f"Post with id {id} not found")
 				return Post(
+					id=db_post.Post.id,
 					title=db_post.Post.title,
 					content=db_post.Post.content,
 					author_id=db_post.Post.author_id,
@@ -48,6 +50,7 @@ class Query:
 				if None is (db_post_comment := result.fetchone()):
 					raise ValueError(f"Post Comment with id {id} not found")
 				return PostComment(
+					id=db_post_comment.id,
 					post_id=db_post_comment.PostComment.post_id,
 					author_id=db_post_comment.PostComment.author_id,
 					content=db_post_comment.PostComment.content,
@@ -63,6 +66,7 @@ class Query:
 				db_authors = result.all()
 				return [
 					Author(
+						id=d.Author.id,
 						username=d.Author.username,
 						email=d.Author.email,
 						password=d.Author.password,
@@ -80,6 +84,7 @@ class Query:
 				db_posts = result.all()
 				return [
 					Post(
+						id=d.Post.id,
 						title=d.Post.title,
 						content=d.Post.content,
 						author_id=d.Post.author_id,
@@ -97,6 +102,7 @@ class Query:
 				db_post_comments = result.all()
 				return [
 					PostComment(
+						id=d.PostComment.id,
 						post_id=d.PostComment.post_id,
 						author_id=d.PostComment.author_id,
 						content=d.PostComment.content,
