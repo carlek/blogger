@@ -13,7 +13,7 @@ Run:
 docker-compose up -d
 ```
 
-Populate Database: FastAPI 
+Populate Database: FastAPI
 ```
 http://localhost:8000/docs
 
@@ -23,6 +23,11 @@ POST to /populate-database/
 Query Database:  GraphiQL
 ```
 http://localhost:8000/graphql
+```
+
+Run Tests:
+```
+docker-compose run --rm app pytest tests --asyncio-mode=strict
 ```
 
 Sample Queries:
