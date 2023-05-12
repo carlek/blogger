@@ -8,19 +8,16 @@ services:
     command: python main.py
     ports:
       - "8000:8000"
-    environment:
-      - PYTHONUNBUFFERED=1
-#      - DATABASE_URL=postgresql+asyncpg://postgres:password@blogger-db:5432/blogger
+    env_file:
+      - envvars.sh
     depends_on:
       - blogger-db
 
   blogger-db:
     image: postgres:15
     container_name: blogger-db-container
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=blogger
+    env_file:
+      - envvars.sh
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 #      - ./init-user.sql:/docker-entrypoint-initdb.d/init-user.sql
