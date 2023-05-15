@@ -8,20 +8,21 @@ from util.settings import settings
 
 
 def create_fresh_database():
-		db_url = f"postgresql://{settings.DB_USER}:{settings.DB_PASSWORD}" + \
-                 f"@{settings.DB_SERVER}:{settings.DB_PORT}/{settings.DB_NAME}"
-		if not database_exists(db_url):
-			create_database(db_url)
+	db_url = f"postgresql://{settings.DB_USER}:{settings.DB_PASSWORD}" + \
+			 f"@{settings.DB_SERVER}:{settings.DB_PORT}/{settings.DB_NAME}"
+	if not database_exists(db_url):
+		create_database(db_url)
 
 
-def create_data(debug: bool = False):
+def create_data(truncate: bool = True, debug: bool = False):
 	url = f"http://{settings.APP_HOST}:{settings.APP_PORT}/graphql"
 	headers = {'Content-Type': 'application/json'}
 
-	query = truncate_table_query
-	for v in truncate_table_variables:
-		response = requests.post(url, headers=headers, json={'query': query, 'variables': v})
-		if debug: print(response.json())
+	if truncate:
+		query = truncate_table_query
+		for v in truncate_table_variables:
+			response = requests.post(url, headers=headers, json={'query': query, 'variables': v})
+			if debug: print(response.json())
 
 	query = create_author_query
 	for v in create_author_variables:

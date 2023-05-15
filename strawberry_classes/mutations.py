@@ -1,12 +1,15 @@
 from datetime import datetime
 
 import strawberry
+from asyncpg.exceptions import UniqueViolationError
 from sqlalchemy import text, select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 from db.models import Author as db_Author, Post as db_Post, PostComment as db_PostComment
-from strawberry_classes.models import Author, Post, PostComment
+from strawberry_classes.models import Author, Post, PostComment, Error
 from util.settings import settings
+from typing import Union
+
 
 @strawberry.type
 class Mutation:
@@ -22,17 +25,20 @@ class Mutation:
 					created_at=create_time,
 					updated_at=create_time,
 				)
-				session.add(db_author)
-				await session.commit()
-				await session.refresh(db_author)
-				return Author(
-					id=db_author.id,
-					username=username,
-					email=email,
-					password=password,
-					created_at=create_time,
-					updated_at=create_time
-				)
+				try:
+					session.add(db_author)
+					await session.commit()
+					await session.refresh(db_author)
+					return Author(
+						id=db_author.id,
+						username=username,
+						email=email,
+						password=password,
+						created_at=create_time,
+						updated_at=create_time
+					)
+				except UniqueViolationError as e:
+					return f"Author with this email or username already exists: {e}"
 
 	@strawberry.mutation
 	async def edit_author(self, id: int, username: str = None, email: str = None, password: str = None) -> Author:
@@ -49,12 +55,12 @@ class Mutation:
 					db_author.Author.password = password
 				db_author.Author.updated_at = datetime.now()
 				author = Author(
-						username=db_author.Author.username,
-						email=db_author.Author.email,
-						password=db_author.Author.password,
-						created_at=db_author.Author.created_at,
-						updated_at=db_author.Author.updated_at,
-					)
+					username=db_author.Author.username,
+					email=db_author.Author.email,
+					password=db_author.Author.password,
+					created_at=db_author.Author.created_at,
+					updated_at=db_author.Author.updated_at,
+				)
 				await session.commit()
 				return author
 

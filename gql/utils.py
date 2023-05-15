@@ -10,9 +10,3 @@ truncate_table_variables = \
 	{"tableName": "postcomment"},
 	{"tableName": "author"},
 ]
-
-populate_database_query = """
-	mutation PopulateDatabase {
-		populateDatabase() 
-	}
-"""

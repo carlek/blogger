@@ -27,3 +27,7 @@ class PostComment:
 	content: str
 	created_at: datetime
 	updated_at: datetime
+
+@strawberry.type
+class Error:
+	message: str
