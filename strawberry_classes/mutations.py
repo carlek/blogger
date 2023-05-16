@@ -6,9 +6,8 @@ from sqlalchemy import text, select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 from db.models import Author as db_Author, Post as db_Post, PostComment as db_PostComment
-from strawberry_classes.models import Author, Post, PostComment, Error
+from strawberry_classes.models import Author, Post, PostComment
 from util.settings import settings
-from typing import Union
 
 
 @strawberry.type
@@ -38,7 +37,7 @@ class Mutation:
 						updated_at=create_time
 					)
 				except UniqueViolationError as e:
-					return f"Author with this email or username already exists: {e}"
+					raise ValueError(f"Author with this email or username already exists: {e}")
 
 	@strawberry.mutation
 	async def edit_author(self, id: int, username: str = None, email: str = None, password: str = None) -> Author:
@@ -71,8 +70,9 @@ class Mutation:
 				db_author = await session.get(db_Author, id)
 				if not db_author:
 					raise ValueError(f"Author with id {id} not found")
-				session.delete(db_author)
+				await session.delete(db_author)
 				await session.commit()
+				print(session)
 				return True
 
 	@strawberry.mutation

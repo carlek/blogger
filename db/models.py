@@ -13,8 +13,8 @@ class Author(Base):
 	password = Column(String)
 	created_at = Column(DateTime, default=datetime.utcnow)
 	updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-	posts = relationship("Post", back_populates="author")
-	comments = relationship("PostComment", back_populates="author")
+	posts = relationship("Post", back_populates="author", cascade="all, delete")
+	comments = relationship("PostComment", back_populates="author", cascade="all, delete")
 
 
 class Post(Base):
@@ -25,8 +25,8 @@ class Post(Base):
 	author_id = Column(Integer, ForeignKey("author.id"))
 	created_at = Column(DateTime, default=datetime.utcnow)
 	updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-	author = relationship("Author", back_populates="posts")
-	comments = relationship("PostComment", back_populates="post")
+	author = relationship("Author", back_populates="posts", cascade="all, delete")
+	comments = relationship("PostComment", back_populates="post", cascade="all, delete")
 
 
 class PostComment(Base):

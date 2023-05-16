@@ -19,3 +19,15 @@ edit_author_variables = \
 		{'id': 5, 'username': 'new_username_5', 'email': 'new_email_5', 'password': 'new_password_5'},
 	]
 
+delete_author_query = '''
+	mutation DeleteAuthor($id: Int!) {
+		deleteAuthor(id: $id) {
+			id
+		}
+	}
+'''
+
+delete_author_variables = \
+	[
+		{'id': 1},
+	]
