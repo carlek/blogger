@@ -6,15 +6,17 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 from db.models import Author as db_Author, Post as db_Post, PostComment as db_PostComment
 from strawberry_classes.models import Author, Post, PostComment
-from strawberry_classes.models import AuthorSuccess, Error
+from strawberry_classes.models import AuthorSuccess, PostSuccess, PostCommentSuccess, Error
 from util.settings import settings
 
-Response = strawberry.union("AuthorResponses", [AuthorSuccess, Error])
+AuthorResponse = strawberry.union("AuthorResponses", [AuthorSuccess, Error])
+PostResponse = strawberry.union("PostResponses", [PostSuccess, Error])
+PostCommentResponse = strawberry.union("PostCommentResponses", [PostCommentSuccess, Error])
 
 @strawberry.type
 class Mutation:
 	@strawberry.mutation
-	async def create_author(self, username: str, email: str, password: str) -> Response:
+	async def create_author(self, username: str, email: str, password: str) -> AuthorResponse:
 		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
 			async with AsyncSession(bind=conn) as session:
 				create_time = datetime.now()
@@ -37,7 +39,7 @@ class Mutation:
 					return Error(message=f"Cannot create author: {e}")
 
 	@strawberry.mutation
-	async def edit_author(self, id: int, username: str = None, email: str = None, password: str = None) -> Response:
+	async def edit_author(self, id: int, username: str = None, email: str = None, password: str = None) -> AuthorResponse:
 		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
 			async with AsyncSession(bind=conn) as session:
 				result = await session.execute(select(db_Author).where(db_Author.id == id))
@@ -65,10 +67,10 @@ class Mutation:
 						message="Author updated"
 					)
 				except Exception as e:
-					return Error(message=f"Author not found, not edited: id={id}")
+					return Error(message=f"Author not found, not edited: id={id} error={e}")
 
 	@strawberry.mutation
-	async def delete_author(self, id: int) -> Response:
+	async def delete_author(self, id: int) -> AuthorResponse:
 		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
 			async with AsyncSession(bind=conn) as session:
 				db_author = await session.get(db_Author, id)
@@ -82,9 +84,7 @@ class Mutation:
 					return Error(message=f"Author not deleted: {e}")
 
 	@strawberry.mutation
-	async def create_post(
-			self, title: str, content: str, author_id: int
-	) -> Post:
+	async def create_post(self, title: str, content: str, author_id: int) -> Post:
 		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
 			async with AsyncSession(bind=conn) as session:
 				db_post = db_Post(
