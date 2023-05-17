@@ -31,7 +31,31 @@ docker-compose run --rm app pytest tests --asyncio-mode=strict
 ```
 
 Sample Queries:
+
+
 ```
+# create author
+mutation CreateAuthor($username: String!, $email: String!, $password: String!) {
+  createAuthor(username: $username, email: $email, password: $password) {
+    __typename
+    ... on AuthorSuccess {
+      author {
+        id
+        username
+        email
+        createdAt
+        updatedAt
+      }
+      message
+    }
+    ... on Error {
+      message
+    }
+  }
+}
+variables = {"username": "bigbird", "email": "big@bird.com", "password": "hithere!!!"}
+
+
 # get authors
 query {
   getAuthors {
@@ -68,4 +92,25 @@ variables =
   "password": "new_password_2",
   "email":"newjohndoe@example.com"
 }
+
+# delete author
+mutation DeleteAuthor($id: Int!) {
+  deleteAuthor(id: $id) {
+    ... on AuthorSuccess {
+      author {
+        id
+        username
+        email
+        createdAt
+        updatedAt
+      }
+      message
+    }
+    ... on Error {
+      message
+    }
+  }
+}
+variables = {"id": 1}
+
 ```

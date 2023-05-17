@@ -1,15 +1,24 @@
 import random
 
 create_author_query = """
-    mutation CreateAuthor($username: String!, $email: String!, $password: String!) {
-        createAuthor(username: $username, email: $email, password: $password) {
-            username
-            email
-            password
-            createdAt
-            updatedAt
-        }
+mutation CreateAuthor($username: String!, $email: String!, $password: String!) {
+  createAuthor(username: $username, email: $email, password: $password) {
+    __typename
+    ... on AuthorSuccess {
+      author {
+        id
+        username
+        email
+        createdAt
+        updatedAt
+      }
+      message
     }
+    ... on Error {
+      message
+    }
+  }
+}
 """
 
 create_author_variables = \

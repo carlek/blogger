@@ -20,11 +20,23 @@ edit_author_variables = \
 	]
 
 delete_author_query = '''
-	mutation DeleteAuthor($id: Int!) {
-		deleteAuthor(id: $id) {
-			id
-		}
-	}
+mutation DeleteAuthor($id: Int!) {
+  deleteAuthor(id: $id) {
+    ... on AuthorSuccess {
+      author {
+        id
+        username
+        email
+        createdAt
+        updatedAt
+      }
+      message
+    }
+    ... on Error {
+      message
+    }
+  }
+}
 '''
 
 delete_author_variables = \
