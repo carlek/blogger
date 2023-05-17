@@ -65,7 +65,7 @@ class Mutation:
 						message="Author updated"
 					)
 				except Exception as e:
-					return Error(message=f"Author not updated: {e}")
+					return Error(message=f"Author not found, not edited: id={id}")
 
 	@strawberry.mutation
 	async def delete_author(self, id: int) -> Response:
@@ -79,7 +79,7 @@ class Mutation:
 					await session.commit()
 					return AuthorSuccess(author=db_author, message="Author deleted successfully")
 				except Exception as e:
-						return Error(message=f"Author not deleted: {e}")
+					return Error(message=f"Author not deleted: {e}")
 
 	@strawberry.mutation
 	async def create_post(
