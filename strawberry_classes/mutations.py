@@ -40,7 +40,7 @@ class Mutation:
 			async with AsyncSession(bind=conn) as session:
 				result = await session.execute(select(db_Author).where(db_Author.id == id))
 				if None is (db_author := result.fetchone()):
-					return Error(message=f"Author with id {id} not found")
+					return Error(message=f"Author not found, not edited: id = {id}")
 				if username:
 					db_author.Author.username = username
 				if email:

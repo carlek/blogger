@@ -44,7 +44,7 @@ async def test_edit_author():
 	assert result.author.created_at < result.author.updated_at
 	result = await mutation.edit_author(id=2, username="newoscar", email="newoscar@grouch.com", password="newpassword")
 	assert type(result) == Error
-	assert result.message == 'Author with id 2 not found'
+	assert result.message == "Author not found, not edited: id = 2"
 
 @pytest.mark.asyncio
 async def test_delete_author():
