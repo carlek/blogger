@@ -3,17 +3,10 @@ from strawberry_classes.mutations import Mutation
 from strawberry_classes.queries import Query
 from strawberry_classes.models import Author
 from strawberry_classes.models import AuthorSuccess, Error
+from conftest import clear_tables
 
 query = Query()
 mutation = Mutation()
-
-async def clear_tables() -> None:
-	result = await mutation.truncate_table("author")
-	assert result == "success"
-	result = await mutation.truncate_table("post")
-	assert result == "success"
-	result = await mutation.truncate_table("postcomment")
-	assert result == "success"
 
 @pytest.mark.asyncio
 async def test_create_author():
