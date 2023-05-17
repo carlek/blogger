@@ -3,7 +3,7 @@ from strawberry_classes.mutations import Mutation
 from strawberry_classes.queries import Query
 from strawberry_classes.models import Author
 from strawberry_classes.models import AuthorSuccess, Error
-from conftest import clear_tables
+from .utils import clear_tables
 
 query = Query()
 mutation = Mutation()
