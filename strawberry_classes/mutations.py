@@ -1,17 +1,13 @@
 from datetime import datetime
 import strawberry
-from asyncpg.exceptions import UniqueViolationError
 from sqlalchemy import text, select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.exc import IntegrityError
 
 from db.models import Author as db_Author, Post as db_Post, PostComment as db_PostComment
 from strawberry_classes.models import Author, Post, PostComment
-from strawberry_classes.models import AuthorSuccess, PostSuccess, PostCommentSuccess, Error
+from strawberry_classes.models import AuthorSuccess, AuthorResponse, Error
 from util.settings import settings
-
-AuthorResponse = strawberry.union("AuthorResponses", [AuthorSuccess, Error])
-PostResponse = strawberry.union("PostResponses", [PostSuccess, Error])
-PostCommentResponse = strawberry.union("PostCommentResponses", [PostCommentSuccess, Error])
 
 @strawberry.type
 class Mutation:
@@ -35,7 +31,7 @@ class Mutation:
 						author=db_author,
 						message="Author created"
 					)
-				except UniqueViolationError as e:
+				except IntegrityError as e:
 					return Error(message=f"Cannot create author: {e}")
 
 	@strawberry.mutation

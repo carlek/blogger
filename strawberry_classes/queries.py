@@ -2,28 +2,32 @@ import strawberry
 from sqlalchemy import select
 from typing import List
 from strawberry_classes.models import Author, Post, PostComment
+from strawberry_classes.models import AuthorSuccess, AuthorResponse, Error
 from db.models import Author as db_Author, Post as db_Post, PostComment as db_PostComment
 from util.settings import settings
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-
 
 @strawberry.type
 class Query:
 
 	@strawberry.field
-	async def get_author(self, id: int) -> Author:
+	async def get_author(self, id: int) -> AuthorResponse:
 		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
 			async with AsyncSession(bind=conn) as session:
 				result = await session.execute(select(db_Author).where(db_Author.id == id))
 				if None is (db_author := result.fetchone()):
-					raise ValueError(f"Author with id {id} not found")
-				return Author(
+					return Error(message=f"Author with id={id} not found")
+				author = Author(
 					id=db_author.Author.id,
 					username=db_author.Author.username,
 					email=db_author.Author.email,
 					password=db_author.Author.password,
 					created_at=db_author.Author.created_at,
 					updated_at=db_author.Author.updated_at,
+				)
+				return AuthorSuccess(
+					author=author,
+					message=f"Author with id={id} found"
 				)
 
 	@strawberry.field

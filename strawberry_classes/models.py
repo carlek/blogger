@@ -46,3 +46,9 @@ class PostCommentSuccess:
 @strawberry.type
 class Error:
 	message: str
+
+
+AuthorResponse = strawberry.union("AuthorResponses", [AuthorSuccess, Error])
+PostResponse = strawberry.union("PostResponses", [PostSuccess, Error])
+PostCommentResponse = strawberry.union("PostCommentResponses", [PostCommentSuccess, Error])
+
