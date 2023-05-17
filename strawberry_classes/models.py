@@ -29,5 +29,20 @@ class PostComment:
 	updated_at: datetime
 
 @strawberry.type
+class AuthorSuccess:
+	author: Author
+	message: str
+
+@strawberry.type
+class PostSuccess:
+	post: Post
+	message: str
+
+@strawberry.type
+class PostCommentSuccess:
+	postcomment: PostComment
+	message: str
+
+@strawberry.type
 class Error:
 	message: str
