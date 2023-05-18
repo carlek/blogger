@@ -4,6 +4,7 @@ from typing import List
 from strawberry_classes.models import Author, Post, PostComment
 from strawberry_classes.models import AuthorSuccess, AuthorResponse
 from strawberry_classes.models import PostSuccess, PostResponse
+from strawberry_classes.models import PostCommentSuccess, PostCommentResponse
 from strawberry_classes.models import Error
 from db.models import Author as db_Author, Post as db_Post, PostComment as db_PostComment
 from util.settings import settings
@@ -53,19 +54,23 @@ class Query:
 				)
 
 	@strawberry.field
-	async def get_post_comment(self, id: int) -> PostComment:
+	async def get_post_comment(self, id: int) -> PostCommentResponse:
 		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
 			async with AsyncSession(bind=conn) as session:
 				result = await session.execute(select(db_PostComment).where(db_PostComment.id == id))
 				if None is (db_post_comment := result.fetchone()):
-					raise ValueError(f"Post Comment with id {id} not found")
-				return PostComment(
-					id=db_post_comment.id,
+					return Error(message=f"PostComment with id {id} not found")
+				post_comment = PostComment(
+					id=db_post_comment.PostComment.id,
 					post_id=db_post_comment.PostComment.post_id,
 					author_id=db_post_comment.PostComment.author_id,
 					content=db_post_comment.PostComment.content,
 					created_at=db_post_comment.PostComment.created_at,
 					updated_at=db_post_comment.PostComment.updated_at,
+				)
+				return PostCommentSuccess(
+					postcomment=post_comment,
+					message=f"PostComment with id={id} found"
 				)
 
 	@strawberry.field

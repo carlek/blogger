@@ -8,6 +8,7 @@ from db.models import Author as db_Author, Post as db_Post, PostComment as db_Po
 from strawberry_classes.models import Author, Post, PostComment
 from strawberry_classes.models import AuthorSuccess, AuthorResponse, Error
 from strawberry_classes.models import PostSuccess, PostResponse
+from strawberry_classes.models import PostCommentSuccess, PostCommentResponse
 from util.settings import settings
 
 @strawberry.type
@@ -135,7 +136,7 @@ class Mutation:
 					return Error(message=f"Post not deleted: {e}")
 
 	@strawberry.mutation
-	async def create_post_comment(self, post_id: int, author_id: int, content: str) -> PostComment:
+	async def create_post_comment(self, post_id: int, author_id: int, content: str) -> PostCommentResponse:
 		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
 			async with AsyncSession(bind=conn) as session:
 				create_time = datetime.now()
@@ -146,17 +147,51 @@ class Mutation:
 					created_at=create_time,
 					updated_at=create_time,
 				)
-				session.add(db_post_comment)
-				await session.commit()
-				await session.refresh(db_post_comment)
-				return PostComment(
-					id=db_post_comment.id,
-					post_id=post_id,
-					author_id=author_id,
-					content=content,
-					created_at=datetime.now(),
-					updated_at=datetime.now(),
+				try:
+					session.add(db_post_comment)
+					await session.commit()
+					await session.refresh(db_post_comment)
+					return PostCommentSuccess(postcomment=db_post_comment, message="PostComment created")
+				except IntegrityError as e:
+					return Error(message=f"Cannot create PostComment: {e}")
+
+	@strawberry.mutation
+	async def edit_post_comment(self, id: int, content: str) -> PostCommentResponse:
+		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
+			async with AsyncSession(bind=conn) as session:
+				result = await session.execute(select(db_PostComment).where(db_PostComment.id == id))
+				if None is (db_post_comment := result.fetchone()):
+					return Error(message=f"PostComment not found, not edited: id = {id}")
+				if content:
+					db_post_comment.PostComment.content = content
+				db_post_comment.PostComment.updated_at = datetime.now()
+				post_comment = PostComment(
+					id=db_post_comment.PostComment.id,
+					post_id=db_post_comment.PostComment.post_id,
+					author_id=db_post_comment.PostComment.author_id,
+					content=db_post_comment.PostComment.content,
+					created_at=db_post_comment.PostComment.created_at,
+					updated_at=db_post_comment.PostComment.updated_at,
 				)
+				try:
+					await session.commit()
+					return PostCommentSuccess(postcomment=post_comment, message="PostComment updated")
+				except Exception as e:
+					return Error(message=f"PostComment not found, not edited: id={id} error={e}")
+
+	@strawberry.mutation
+	async def delete_post_comment(self, id: int) -> PostCommentResponse:
+		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
+			async with AsyncSession(bind=conn) as session:
+				db_post_comment = await session.get(db_PostComment, id)
+				if not db_post_comment:
+					return Error(message=f"PostComment not found, not deleted: id={id}")
+				try:
+					await session.delete(db_post_comment)
+					await session.commit()
+					return PostCommentSuccess(postcomment=db_post_comment, message="PostComment deleted successfully")
+				except Exception as e:
+					return Error(message=f"PostComment not deleted: {e}")
 
 	@strawberry.mutation
 	async def truncate_table(self, table_name: str) -> str:

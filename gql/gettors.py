@@ -56,44 +56,6 @@ get_post_variables = \
     {"id": 99},
   ]
 
-# get_author(id: int) -> Author:
-get_author = """
-query {
-  getAuthor(id: 1) {
-    username
-    email
-    password
-    createdAt
-    updatedAt
-  }
-}
-"""
-
-# get_post(id: int) -> Post:
-get_post = """
-query {
-  getPost(id: 1) {
-    title
-    content
-    authorId
-    createdAt
-    updatedAt
-  }
-}
-"""
-
-# get_post_comment(id: int) -> PostComment:
-get_post_comment = """
-query {
-  getPostComment(id: 1) {
-    postId
-    authorId
-    content
-    createdAt
-    updatedAt
-  }
-}
-"""
 
 # get_authors() -> List[Author]:
 get_authors = """
@@ -111,6 +73,7 @@ query {
 get_posts = """
 query {
   getPosts {
+    id
     title
     content
     authorId
