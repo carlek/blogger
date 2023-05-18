@@ -1,13 +1,21 @@
 edit_author_query = '''
-	mutation EditAuthor($id: Int!, $username: String, $email: String, $password: String) {
-		editAuthor(id: $id, username: $username, email: $email, password: $password) {
-			username
-			email
-			password
-			createdAt
-			updatedAt
-		}
-	}
+mutation EditAuthor($id: Int!, $username: String, $email: String, $password: String) {
+  editAuthor(id: $id, username: $username, email: $email, password: $password) {
+    ... on AuthorSuccess {
+      author {
+        username
+        email
+        password
+        createdAt
+        updatedAt
+      }
+      message
+    }
+    ... on Error {
+      message
+    }
+  }
+}
 '''
 
 edit_author_variables = \
@@ -43,3 +51,25 @@ delete_author_variables = \
 	[
 		{'id': 1},
 	]
+
+delete_post_query = \
+'''
+mutation DeletePost($id: Int!) {
+  deletePost(id: $id) {
+    ... on PostSuccess {
+      post {
+        id
+        title
+        content
+        authorId
+        createdAt
+        updatedAt
+      }
+      message
+    }
+    ... on Error {
+      message
+    }
+  }
+}
+'''

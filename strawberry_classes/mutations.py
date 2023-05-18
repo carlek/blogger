@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from db.models import Author as db_Author, Post as db_Post, PostComment as db_PostComment
 from strawberry_classes.models import Author, Post, PostComment
 from strawberry_classes.models import AuthorSuccess, AuthorResponse, Error
+from strawberry_classes.models import PostSuccess, PostResponse
 from util.settings import settings
 
 @strawberry.type
@@ -27,10 +28,7 @@ class Mutation:
 					session.add(db_author)
 					await session.commit()
 					await session.refresh(db_author)
-					return AuthorSuccess(
-						author=db_author,
-						message="Author created"
-					)
+					return AuthorSuccess(author=db_author, message="Author created")
 				except IntegrityError as e:
 					return Error(message=f"Cannot create author: {e}")
 
@@ -58,10 +56,7 @@ class Mutation:
 				)
 				try:
 					await session.commit()
-					return AuthorSuccess(
-						author=author,
-						message="Author updated"
-					)
+					return AuthorSuccess(author=author, message="Author updated")
 				except Exception as e:
 					return Error(message=f"Author not found, not edited: id={id} error={e}")
 
@@ -80,38 +75,76 @@ class Mutation:
 					return Error(message=f"Author not deleted: {e}")
 
 	@strawberry.mutation
-	async def create_post(self, title: str, content: str, author_id: int) -> Post:
+	async def create_post(self, title: str, content: str, author_id: int) -> PostResponse:
 		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
 			async with AsyncSession(bind=conn) as session:
+				create_time = datetime.now()
 				db_post = db_Post(
 					title=title,
 					content=content,
 					author_id=author_id,
-					created_at=datetime.now(),
-					updated_at=datetime.now(),
+					created_at=create_time,
+					updated_at=create_time,
 				)
-				session.add(db_post)
-				await session.commit()
-				await session.refresh(db_post)
-				return Post(
-					id=db_post.id,
-					title=title,
-					content=content,
-					author_id=author_id,
-					created_at=datetime.now(),
-					updated_at=datetime.now(),
+				try:
+					session.add(db_post)
+					await session.commit()
+					await session.refresh(db_post)
+					return PostSuccess(post=db_post, message="Post created")
+				except IntegrityError as e:
+					return Error(message=f"Cannot create post: {e}")
+
+	@strawberry.mutation
+	async def edit_post(self, id: int, title: str, content: str) -> PostResponse:
+		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
+			async with AsyncSession(bind=conn) as session:
+				result = await session.execute(select(db_Post).where(db_Post.id == id))
+				if None is (db_post := result.fetchone()):
+					return Error(message=f"Post not found, not edited: id = {id}")
+				if title:
+					db_post.Post.title = title
+				if content:
+					db_post.Post.content = content
+				db_post.Post.updated_at = datetime.now()
+				post = Post(
+					id=db_post.Post.id,
+					title=db_post.Post.title,
+					content=db_post.Post.content,
+					author_id=db_post.Post.author_id,
+					created_at=db_post.Post.created_at,
+					updated_at=db_post.Post.updated_at,
 				)
+				try:
+					await session.commit()
+					return PostSuccess(post=post, message="Post updated")
+				except Exception as e:
+					return Error(message=f"Post not found, not edited: id={id} error={e}")
+
+	@strawberry.mutation
+	async def delete_post(self, id: int) -> PostResponse:
+		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
+			async with AsyncSession(bind=conn) as session:
+				db_post = await session.get(db_Post, id)
+				if not db_post:
+					return Error(message=f"Post not found, not deleted: id={id}")
+				try:
+					await session.delete(db_post)
+					await session.commit()
+					return PostSuccess(post=db_post, message="Post deleted successfully")
+				except Exception as e:
+					return Error(message=f"Post not deleted: {e}")
 
 	@strawberry.mutation
 	async def create_post_comment(self, post_id: int, author_id: int, content: str) -> PostComment:
 		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
 			async with AsyncSession(bind=conn) as session:
+				create_time = datetime.now()
 				db_post_comment = db_PostComment(
 					post_id=post_id,
 					author_id=author_id,
 					content=content,
-					created_at=datetime.now(),
-					updated_at=datetime.now(),
+					created_at=create_time,
+					updated_at=create_time,
 				)
 				session.add(db_post_comment)
 				await session.commit()

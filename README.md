@@ -30,9 +30,7 @@ Run Tests:
 docker-compose run --rm app pytest tests --asyncio-mode=strict
 ```
 
-Sample Queries:
-
-
+Sample Queries:  ```gql/*.py```
 ```
 # create author
 mutation CreateAuthor($username: String!, $email: String!, $password: String!) {
@@ -68,11 +66,22 @@ query {
 
 # get author
 query GetAuthor($id: Int!) {
-    getAuthor(id: $id) {
+  getAuthor(id: $id) {
+    __typename
+    ... on AuthorSuccess {
+      author {
+        id
         username
         email
         createdAt
+        updatedAt
+      }
+      message
     }
+    ... on Error {
+      message
+    }
+  }
 }
 variables = {"id": 1}
 

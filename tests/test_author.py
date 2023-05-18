@@ -2,7 +2,7 @@ import pytest
 from strawberry_classes.mutations import Mutation
 from strawberry_classes.queries import Query
 from strawberry_classes.models import AuthorSuccess, Error
-from .utils import clear_tables
+from .utils import clear_tables, create_test_author
 
 query = Query()
 mutation = Mutation()
@@ -19,7 +19,8 @@ async def test_create_author():
 
 @pytest.mark.asyncio
 async def test_get_author():
-	await test_create_author()
+	await clear_tables()
+	await create_test_author("oscar", "oscar@grouch.com", "goaway!!!")
 	result = await query.get_author(1)
 	assert type(result) == AuthorSuccess
 	assert result.author.username == "oscar"
@@ -32,7 +33,8 @@ async def test_get_author():
 
 @pytest.mark.asyncio
 async def test_edit_author():
-	await test_create_author()
+	await clear_tables()
+	await create_test_author("oscar", "oscar@grouch.com", "goaway!!!")
 	result = await query.get_author(1)
 	created = result.author.created_at
 	result = await mutation.edit_author(id=1, username="newoscar", email="newoscar@grouch.com", password="newpassword")
@@ -48,7 +50,8 @@ async def test_edit_author():
 
 @pytest.mark.asyncio
 async def test_delete_author():
-	await test_create_author()
+	await clear_tables()
+	await create_test_author("oscar", "oscar@grouch.com", "goaway!!!")
 	result = await mutation.delete_author(id=1)
 	assert result.message == "Author deleted successfully"
 	result = await mutation.delete_author(id=2)

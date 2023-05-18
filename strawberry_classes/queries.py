@@ -2,7 +2,9 @@ import strawberry
 from sqlalchemy import select
 from typing import List
 from strawberry_classes.models import Author, Post, PostComment
-from strawberry_classes.models import AuthorSuccess, AuthorResponse, Error
+from strawberry_classes.models import AuthorSuccess, AuthorResponse
+from strawberry_classes.models import PostSuccess, PostResponse
+from strawberry_classes.models import Error
 from db.models import Author as db_Author, Post as db_Post, PostComment as db_PostComment
 from util.settings import settings
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
@@ -31,19 +33,23 @@ class Query:
 				)
 
 	@strawberry.field
-	async def get_post(self, id: int) -> Post:
+	async def get_post(self, id: int) -> PostResponse:
 		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
 			async with AsyncSession(bind=conn) as session:
 				result = await session.execute(select(db_Post).where(db_Post.id == id))
 				if None is (db_post := result.fetchone()):
-					raise ValueError(f"Post with id {id} not found")
-				return Post(
+					return Error(message=f"Post with id {id} not found")
+				post = Post(
 					id=db_post.Post.id,
 					title=db_post.Post.title,
 					content=db_post.Post.content,
 					author_id=db_post.Post.author_id,
 					created_at=db_post.Post.created_at,
 					updated_at=db_post.Post.updated_at,
+				)
+				return PostSuccess(
+					post=post,
+					message=f"Post with id={id} found"
 				)
 
 	@strawberry.field

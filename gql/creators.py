@@ -31,14 +31,23 @@ create_author_variables = \
 	]
 
 create_post_query = """
-    mutation CreatePost($title: String!, $content: String!, $authorId: Int!) {
-        createPost(title: $title, content: $content, authorId: $authorId) {
-            title
-            content
-            authorId
-            createdAt
-        }
+mutation CreatePost($title: String!, $content: String!, $authorId: Int!) {
+  createPost(title: $title, content: $content, authorId: $authorId) {
+    __typename
+    ... on PostSuccess {
+      post {
+        title
+        content
+        authorId
+        createdAt
+      }
+      message
     }
+    ... on Error {
+      message
+    }
+  }
+}
 """
 
 create_post_variables = []
