@@ -59,14 +59,25 @@ for i in range(1, 1 + number_of_authors):
 		create_post_variables.append(v)
 
 create_post_comment_query = """
-    mutation CreatePostComment($postId: Int!, $authorId: Int!, $content: String!) {
-        createPostComment(postId: $postId, authorId: $authorId, content: $content) {
-            postId
-            authorId
-            content
-            createdAt
-        }
+mutation CreatePostComment($postId: Int!, $authorId: Int!, $content: String!) {
+  createPostComment(postId: $postId, authorId: $authorId, content: $content) {
+    __typename
+    ... on PostCommentSuccess {
+      postcomment {
+        id
+        postId
+        authorId
+        content
+        createdAt
+        updatedAt
+      }
+      message
     }
+    ... on Error {
+      message
+    }
+  }
+}
 """
 
 create_post_comment_variables = []
