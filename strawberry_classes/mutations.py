@@ -12,7 +12,7 @@ from strawberry_classes.models import PostCommentSuccess, PostCommentResponse
 from util.settings import settings
 
 @strawberry.type
-class Mutation:
+class Mutations:
 	@strawberry.mutation
 	async def create_author(self, username: str, email: str, password: str) -> AuthorResponse:
 		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:

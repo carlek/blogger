@@ -1,9 +1,9 @@
-from strawberry_classes.mutations import Mutation
+from strawberry_classes.mutations import Mutations
 from strawberry_classes.models import AuthorSuccess, AuthorResponse
 from strawberry_classes.models import PostSuccess, PostResponse
 from strawberry_classes.models import PostCommentSuccess, PostCommentResponse
 
-mutation = Mutation()
+mutation = Mutations()
 
 async def clear_tables() -> None:
 	result = await mutation.truncate_table("author")

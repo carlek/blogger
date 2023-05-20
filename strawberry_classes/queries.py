@@ -11,7 +11,7 @@ from util.settings import settings
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 @strawberry.type
-class Query:
+class Queries:
 
 	@strawberry.field
 	async def get_author(self, id: int) -> AuthorResponse:

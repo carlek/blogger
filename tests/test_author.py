@@ -1,11 +1,11 @@
 import pytest
-from strawberry_classes.mutations import Mutation
-from strawberry_classes.queries import Query
+from strawberry_classes.mutations import Mutations
+from strawberry_classes.queries import Queries
 from strawberry_classes.models import AuthorSuccess, Error
 from .utils import clear_tables, create_test_author
 
-query = Query()
-mutation = Mutation()
+query = Queries()
+mutation = Mutations()
 
 @pytest.mark.asyncio
 async def test_create_author():
