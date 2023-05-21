@@ -13,6 +13,7 @@ from util.settings import settings
 
 @strawberry.type
 class Mutations:
+
 	@strawberry.mutation
 	async def create_author(self, username: str, email: str, password: str) -> AuthorResponse:
 		async with create_async_engine(url=settings.DB_CONNECTION_STR, echo=True).begin() as conn:
@@ -200,3 +201,21 @@ class Mutations:
 				await session.execute(text(f"TRUNCATE TABLE {table_name} RESTART IDENTITY CASCADE;"))
 				await session.commit()
 				return "success"
+
+@strawberry.type
+class Mutation:
+
+	# standard
+	createAuthor: AuthorResponse = strawberry.mutation(resolver=Mutations.create_author)
+	createPost: PostResponse = strawberry.mutation(resolver=Mutations.create_post)
+	createPostComment: PostCommentResponse = strawberry.mutation(resolver=Mutations.create_post_comment)
+	editAuthor: AuthorResponse = strawberry.mutation(resolver=Mutations.edit_author)
+	editPost: PostResponse = strawberry.mutation(resolver=Mutations.edit_post)
+	editPostComment: PostCommentResponse = strawberry.mutation(resolver=Mutations.edit_post_comment)
+	deleteAuthor: AuthorResponse = strawberry.mutation(resolver=Mutations.delete_author)
+	deletePost: PostResponse = strawberry.mutation(resolver=Mutations.delete_post)
+	deletePostComment: PostCommentResponse = strawberry.mutation(resolver=Mutations.delete_post_comment)
+
+	# special
+	truncateTable: str = strawberry.mutation(resolver=Mutations.truncate_table)
+	#  TODO: populateDatabase

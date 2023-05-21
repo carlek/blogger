@@ -3,7 +3,6 @@ import random
 create_author_query = """
 mutation CreateAuthor($username: String!, $email: String!, $password: String!) {
   createAuthor(username: $username, email: $email, password: $password) {
-    __typename
     ... on AuthorSuccess {
       author {
         id
@@ -33,7 +32,6 @@ create_author_variables = \
 create_post_query = """
 mutation CreatePost($title: String!, $content: String!, $authorId: Int!) {
   createPost(title: $title, content: $content, authorId: $authorId) {
-    __typename
     ... on PostSuccess {
       post {
         title
@@ -61,7 +59,6 @@ for i in range(1, 1 + number_of_authors):
 create_post_comment_query = """
 mutation CreatePostComment($postId: Int!, $authorId: Int!, $content: String!) {
   createPostComment(postId: $postId, authorId: $authorId, content: $content) {
-    __typename
     ... on PostCommentSuccess {
       postcomment {
         id

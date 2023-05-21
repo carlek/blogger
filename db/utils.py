@@ -22,7 +22,7 @@ def truncate_tables(debug: bool = False):
 			response = requests.post(url, headers=headers, json={'query': query, 'variables': v})
 			if debug: print(response.json())
 
-def create_data(truncate: bool = True, debug: bool = False):
+def create_data(truncate: bool = True, debug: bool = False) -> str:
 
 	if truncate:
 		truncate_tables()
@@ -41,3 +41,5 @@ def create_data(truncate: bool = True, debug: bool = False):
 	for v in create_post_comment_variables:
 		response = requests.post(url, headers=headers, json={'query': query, 'variables': v})
 		if debug: print(response.json())
+
+	return "database populated"

@@ -2,7 +2,6 @@
 get_author_query = """
 query GetAuthor($id: Int!) {
   getAuthor(id: $id) {
-    __typename
     ... on AuthorSuccess {
       author {
         id
@@ -31,7 +30,6 @@ get_author_variables = \
 get_post_query = """
 query GetPost($id: Int!) {
   getPost(id: $id) {
-    __typename
     ... on PostSuccess {
       post {
         id

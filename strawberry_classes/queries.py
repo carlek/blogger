@@ -126,3 +126,12 @@ class Queries:
 					)
 					for d in db_post_comments
 				]
+
+@strawberry.type
+class Query:
+	getAuthor: AuthorResponse = strawberry.field(resolver=Queries.get_author)
+	getPost: PostResponse = strawberry.field(resolver=Queries.get_post)
+	getPostComment: PostCommentResponse = strawberry.field(resolver=Queries.get_post_comment)
+	getAuthors: List[Author] = strawberry.field(resolver=Queries.get_authors)
+	getPosts: List[Post] = strawberry.field(resolver=Queries.get_posts)
+	getPostComments: List[PostComment] = strawberry.field(resolver=Queries.get_post_comments)
