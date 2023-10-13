@@ -24,8 +24,8 @@ class ApiError(Exception):
 @app.post('/populate-database/')
 def populate_database():
 	try:
-		create_data()
-		return fastapi.Response(content="Database populated", status_code=200)
+		res = create_data()
+		return fastapi.Response(content=res, status_code=200)
 	except ApiError as e:
 		return fastapi.Response(content=e.error_msg, status_code=e.status_code)
 	except Exception as x:
