@@ -42,4 +42,4 @@ def create_data(truncate: bool = True, debug: bool = False) -> str:
 		response = requests.post(url, headers=headers, json={'query': query, 'variables': v})
 		if debug: print(response.json())
 
-	return {"message": "database populated !", "data": ""}
+	return "database populated !"
