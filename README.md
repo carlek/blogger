@@ -5,9 +5,8 @@
 
 Build:  
 ```
-docker-compose build
+docker-compose build . -t blogger:1.0
 ```
-
 Run:
 ```
 docker-compose up -d
