@@ -21,7 +21,7 @@ class ApiError(Exception):
 
 
 # REST api to populate database
-@app.post('/populate-database/')
+@app.post('/populate-database/', response_model=str)
 def populate_database():
 	try:
 		res = create_data()
