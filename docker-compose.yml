@@ -5,22 +5,31 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: blogger-app-container
-    command: python main.py
+    command: ["./wait-for-db.sh", "blogger-db", "python", "main.py"]  # Use a wait script
     ports:
       - "8000:8000"
-    env_file:
-      - envvars.sh
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_SERVER: blogger-db
+      DB_PORT: 5432
+      DB_NAME: blogger
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+      PYTHONUNBUFFERED: 1
     depends_on:
       - blogger-db
 
   blogger-db:
     image: postgres:15
     container_name: blogger-db-container
-    env_file:
-      - envvars.sh
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres  # Required by PostgreSQL
+      POSTGRES_DB: blogger
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-#      - ./init-user.sql:/docker-entrypoint-initdb.d/init-user.sql
+      - ./init-user.sql:/docker-entrypoint-initdb.d/init-user.sql  # Initialize the database
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s

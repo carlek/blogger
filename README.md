@@ -5,11 +5,11 @@
 
 Build:  
 ```
-docker-compose build . -t blogger:1.0
+docker compose build . 
 ```
 Run:
 ```
-docker-compose up -d
+docker compose up -d
 ```
 
 Populate Database: FastAPI
