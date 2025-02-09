@@ -2,7 +2,7 @@
 from util.settings import settings
 from sqlalchemy.ext.asyncio import create_async_engine
 
-# Singleton class: only one object
+# Singleton class, we only need one of these...
 class Engine:
 	_instance = None
 

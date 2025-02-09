@@ -12,7 +12,7 @@ Run:
 docker compose up -d
 ```
 
-Populate Database: FastAPI
+If Needed, Populate Database with FastAPI
 ```
 http://localhost:8000/docs
 
@@ -26,7 +26,7 @@ http://localhost:8000/graphql
 
 Run Tests:
 ```
-docker-compose run --rm app pytest tests --asyncio-mode=strict
+docker compose run --rm app pytest tests --asyncio-mode=strict
 ```
 
 TODO:

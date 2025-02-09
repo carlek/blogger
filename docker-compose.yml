@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: blogger-app-container
-    command: ["./wait-for-db.sh", "blogger-db", "python", "main.py"]  # Use a wait script
+    command: ["./wait-for-db.sh", "blogger-db", "python", "main.py"]  # start app after db starts.
     ports:
       - "8000:8000"
     environment:
@@ -25,11 +25,13 @@ services:
     container_name: blogger-db-container
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres  # Required by PostgreSQL
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: blogger
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-      - ./init-user.sql:/docker-entrypoint-initdb.d/init-user.sql  # Initialize the database
+      - ./init-user.sql:/docker-entrypoint-initdb.d/init-user.sql  # initial script to create a user
+    ports:
+      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
