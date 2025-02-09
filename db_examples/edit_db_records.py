@@ -1,5 +1,5 @@
 import requests
-from util.settings import settings
+from utils.settings import settings
 from gql.editors import edit_author_query, edit_author_variables
 
 url = f"http://{settings.APP_HOST}:{settings.APP_PORT}/graphql"

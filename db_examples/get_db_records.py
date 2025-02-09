@@ -1,5 +1,5 @@
 import requests
-from util.settings import settings
+from utils.settings import settings
 from gql.gettors import get_authors, get_posts, get_post_comments
 from gql.gettors import get_author_query, get_author_variables, get_post_query, get_post_variables
 

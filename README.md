@@ -1,7 +1,7 @@
 # blogger
 
 
-### FastAPI app with graphql api to support blog data 
+### FastAPI app with GraphQL API to support blog data 
 
 Build:  
 ```
@@ -34,8 +34,8 @@ TODO:
 2. Authentication
 
 
-Sample Queries:  ```gql/*.py```
-```
+Sample Queries:
+```graphql
 # create author
 mutation CreateAuthor($username: String!, $email: String!, $password: String!) {
   createAuthor(username: $username, email: $email, password: $password) {
@@ -54,19 +54,27 @@ mutation CreateAuthor($username: String!, $email: String!, $password: String!) {
     }
   }
 }
-variables = {"username": "bigbird", "email": "big@bird.com", "password": "hithere!!!"}
+# variables 
+{"username": "bigbird", "email": "big@bird.com", "password": "hithere!!!"}
+```
+![create author](createAuthor.png)
 
-
+```graphql
 # get authors
 query {
   getAuthors {
+    id
     username
     email
     createdAt
     updatedAt
   }
 }
+```
+![get Authors](getAuthors.png)
 
+**More examples:**
+```graphql
 # get author
 query GetAuthor($id: Int!) {
   getAuthor(id: $id) {
@@ -85,7 +93,8 @@ query GetAuthor($id: Int!) {
     }
   }
 }
-variables = {"id": 1}
+# variables
+{"id": 1}
 
 # edit author
 mutation EditAuthor($id: Int!, $username: String, $email: String, $password: String) {
@@ -105,7 +114,8 @@ mutation EditAuthor($id: Int!, $username: String, $email: String, $password: Str
     }
   }
 }
-variables = {"id": 5, "username": "new_username_5", "email": "new_email_5", "password": "new_password_5"}
+# variables
+{"id": 5, "username": "new_username_5", "email": "new_email_5", "password": "new_password_5"}
 
 # delete author
 mutation DeleteAuthor($id: Int!) {
@@ -125,6 +135,6 @@ mutation DeleteAuthor($id: Int!) {
     }
   }
 }
-variables = {"id": 1}
-
+# variables
+{"id": 1}
 ```
