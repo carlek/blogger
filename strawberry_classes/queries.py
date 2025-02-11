@@ -7,7 +7,7 @@ from strawberry_classes.models import PostSuccess, PostResponse
 from strawberry_classes.models import PostCommentSuccess, PostCommentResponse
 from strawberry_classes.models import Error
 from db.models import Author as db_Author, Post as db_Post, PostComment as db_PostComment
-from util.settings import settings
+from utils.settings import settings
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 @strawberry.type

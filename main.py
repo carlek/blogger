@@ -1,8 +1,8 @@
 import asyncio
 import uvicorn
 
-from util.async_objects import Engine
-from util.settings import settings
+from utils.async_objects import Engine
+from utils.settings import settings
 from db.models import Base
 from db.utils import create_fresh_database
 from api.routes import app

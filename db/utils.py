@@ -4,7 +4,7 @@ from sqlalchemy_utils import database_exists, create_database
 from gql.creators import create_author_query, create_author_variables, create_post_comment_query
 from gql.creators import create_post_query, create_post_variables, create_post_comment_variables
 from gql.utils import truncate_table_query, truncate_table_variables
-from util.settings import settings
+from utils.settings import settings
 
 url = f"http://{settings.APP_HOST}:{settings.APP_PORT}/graphql"
 headers = {'Content-Type': 'application/json'}

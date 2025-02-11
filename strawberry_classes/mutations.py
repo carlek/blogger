@@ -9,7 +9,7 @@ from strawberry_classes.models import Author, Post, PostComment
 from strawberry_classes.models import AuthorSuccess, AuthorResponse, Error
 from strawberry_classes.models import PostSuccess, PostResponse
 from strawberry_classes.models import PostCommentSuccess, PostCommentResponse
-from util.settings import settings
+from utils.settings import settings
 
 @strawberry.type
 class Mutations:

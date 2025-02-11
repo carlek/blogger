@@ -1,5 +1,5 @@
 
-from util.settings import settings
+from utils.settings import settings
 from sqlalchemy.ext.asyncio import create_async_engine
 
 # Singleton class, we only need one of these...
