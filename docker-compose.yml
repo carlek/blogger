@@ -1,4 +1,3 @@
-version: '3'
 services:
   app:
     build:
@@ -8,15 +7,8 @@ services:
     command: ["./wait-for-db.sh", "blogger-db", "python", "main.py"]  # start app after db starts.
     ports:
       - "8000:8000"
-    environment:
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_SERVER: blogger-db
-      DB_PORT: 5432
-      DB_NAME: blogger
-      APP_HOST: 0.0.0.0
-      APP_PORT: 8000
-      PYTHONUNBUFFERED: 1
+    env_file:
+      - .env
     depends_on:
       - blogger-db
 

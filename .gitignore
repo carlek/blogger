@@ -9,3 +9,7 @@ __pycache__/
 
 # pytest
 /tests/.pytest_cache/
+
+# terraform
+terraform.*
+.terraform*
