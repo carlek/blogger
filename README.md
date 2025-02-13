@@ -3,16 +3,23 @@
 
 ### FastAPI app with GraphQL API to support blog data 
 
-Build:  
-```
+*Choose one or the other, because at this time (afaik) there is no docker-compose provider for terraform to work with.*
+
+Docker version:   
+```sh
 docker compose build 
-```
-Run:
-```
 docker compose up -d
+docker compose down -v
+```
+Terraform version:   
+```sh
+cd terraform
+terraform init
+terraform plan
+terraform apply
 ```
 
-If Needed, Populate Database with FastAPI
+Populate Database with FastAPI
 ```
 http://localhost:8000/docs
 
@@ -24,9 +31,9 @@ Query Database:  GraphiQL
 http://localhost:8000/graphql
 ```
 
-Run Tests:
+Run Tests: 
 ```
-docker compose run --rm app pytest tests --asyncio-mode=strict
+docker exec <app-container> pytest tests --asyncio-mode=strict
 ```
 
 TODO:

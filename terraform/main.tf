@@ -23,8 +23,12 @@ resource "docker_volume" "postgres_data" {
 
 # PostgreSQL container
 resource "docker_container" "blogger_db" {
-  name  = "blogger-db-container"
+  name  = "db-container"
   image = docker_image.postgres.image_id
+  labels {
+    label = "com.docker.compose.project"
+    value = "blogger"
+  }
 
   networks_advanced {
     name    = docker_network.blogger_network.name
@@ -76,8 +80,13 @@ resource "docker_image" "app" {
 
 # Application container
 resource "docker_container" "app" {
-  name  = "blogger-app-container"
+  name  = "app-container"
   image = docker_image.app.image_id
+
+  labels {
+    label = "com.docker.compose.project"
+    value = "blogger"
+  }
 
   networks_advanced {
     name = docker_network.blogger_network.name
